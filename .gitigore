@@ -1,0 +1,16 @@
+# Node
+PhoneClient/node_modules/
+PhoneClient/.expo/
+
+# Android Build Artifacts
+PhoneClient/android/app/build/
+PhoneClient/android/.gradle/
+PhoneClient/android/app/release/
+*.apk
+*.aab
+*.keystore
+
+# Python
+__pycache__/
+*.pyc
+shared/
