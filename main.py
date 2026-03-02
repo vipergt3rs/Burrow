@@ -8,6 +8,12 @@ import shutil
 import uuid
 import shlex
 import urllib.parse
+import sys
+
+# Import winreg only if we are on Windows
+if platform.system() == "Windows":
+    import winreg
+
 from tqdm import tqdm
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, Request
 from fastapi.responses import FileResponse
@@ -26,7 +32,6 @@ ws_loop = None
 offered_files = {}
 pending_action = None
 RECEIVE_DIR = ""
-
 
 def start_udp_listener():
     print(f"[DISCOVERY] Starting UDP listener on {UDP_IP}:{UDP_PORT}...")
@@ -102,8 +107,6 @@ async def receive_upload(request: Request, file: UploadFile = File(...)):
     dest_path = os.path.join(RECEIVE_DIR, real_filename)
     
     # 2. Setup the visual terminal progress bar
-    # Note: Content-Length includes multipart boundaries, so it is a slight overestimate,
-    # but works perfectly for a visual progress bar.
     total_size = int(request.headers.get('Content-Length', 0))
     print(f"\n[*] Receiving: {real_filename}")
     progress = tqdm(total=total_size, unit='B', unit_scale=True, desc="Downloading")
@@ -204,7 +207,6 @@ def run_cli():
                     print("[-] No phone connected.")
                     continue
 
-                # Slice everything after 'push ' to correctly handle paths
                 raw_push = cmd[5:].strip()
                 if raw_push.startswith("&"):
                     raw_push = raw_push[1:].strip()
@@ -322,6 +324,26 @@ if __name__ == "__main__":
     print("      Burrow - Local file sharing")
     print("=" * 40 + "\n")
 
+    # --- AUTO-ASK FOR PATH INSTALLATION ---
+    if platform.system() == "Windows":
+        exe_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        try:
+            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Environment", 0, winreg.KEY_ALL_ACCESS)
+            current_path, _ = winreg.QueryValueEx(key, "Path")
+            
+            if exe_dir.lower() not in current_path.lower():
+                print(f"[?] Burrow is not in your global PATH.")
+                choice = input(f"    Add '{exe_dir}' to PATH so you can run 'burrow' from anywhere? (y/n): ").strip().lower()
+                if choice == 'y':
+                    new_path = current_path + os.pathsep + exe_dir
+                    winreg.SetValueEx(key, "Path", 0, winreg.REG_EXPAND_SZ, new_path)
+                    print("[+] SUCCESS: Added to PATH! (Restart your terminal for it to take effect)\n")
+                else:
+                    print("[-] Skipped adding to PATH.\n")
+            winreg.CloseKey(key)
+        except Exception:
+            pass
+
     user_dir = input(
         "Where should received files be saved?\n"
         "(Press Enter to use the current folder): "
@@ -329,6 +351,7 @@ if __name__ == "__main__":
 
     RECEIVE_DIR = user_dir.strip('"').strip("'") if user_dir else os.getcwd()
     os.makedirs(RECEIVE_DIR, exist_ok=True)
+    
     try:
         _s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         _s.connect(("8.8.8.8", 80))

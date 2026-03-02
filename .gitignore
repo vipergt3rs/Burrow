@@ -14,3 +14,13 @@ PhoneClient/android/app/release/
 __pycache__/
 *.pyc
 shared/
+
+# Python Build & Environments
+build/
+dist/
+burrow_env/
+burrow.spec
+
+# Debug Scripts
+debug_listen.py
+debug_send.py
