@@ -12,7 +12,7 @@
 5. **Restart your terminal.** You can now type `burrow` from anywhere to start the server!
 
 ### 2. Android (The Client)
-1. Download `Burrow-Android-v1.0.apk` from the [Releases](https://github.com/vipergt3rs/Burrow/releases) tab.
+1. Download `Burrow.apk` from the [Releases](https://github.com/vipergt3rs/Burrow/releases) tab.
 2. Open the file on your phone and install it.
 3. Grant the required storage permissions so Burrow can save files to your hard drive.
 
