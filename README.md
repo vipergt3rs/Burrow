@@ -1,6 +1,6 @@
 # 🐇 Burrow
 
-**Burrow** is a hyper-fast, zero-friction local file transfer utility. It bypasses cloud uploads and heavy RAM limits to stream massive files and entire directories directly between your Android phone and Windows PC over your local Wi-Fi network.
+**Burrow** is a fast, zero-friction local file transfer utility. It bypasses cloud uploads and heavy RAM limits to stream massive files and entire directories directly between your Android phone and Windows PC over your local Wi-Fi network.
 
 ## 🚀 Installation
 
