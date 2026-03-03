@@ -22,7 +22,7 @@
 
 ### Step 1: Pair the Devices
 1. Open a terminal on your PC and type `burrow` to start the server.
-2. Open the Burrow app on your phone and tap **Scan for PC**, if scanning dosen't work manually type address.
+2. Open the Burrow app on your phone and tap **Scan for PC**, if scanning dosen't work manually type the **TCP address** from the terminal window of Burrow in the pc.
 3. Tap **Pair** next to your PC's name.
 4. On your PC terminal, type `y` to accept the connection.
 
